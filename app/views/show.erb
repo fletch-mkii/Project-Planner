@@ -1,0 +1,31 @@
+<h3><%=@project[:name]%></h3>
+<%unless @project[:description].nil?%>
+  <li><%=@project[:description]%></li>
+<%else%>
+  <li>There is no description for this project.</li>
+<%end%>
+
+<h3>Team Members:</h3>
+<%if @users == []%>
+  <li>There are currently no members assigned to this project.</li>
+<%end%>
+<%@users.each do |user|%>
+  <%unless user[:email].nil?%>
+    <li><%=user[:first_name] + " " + user[:last_name] + " " + user[:email]%></li>
+  <%else%>
+    <li><%=user[:first_name] + " " + user[:last_name]%></li>
+  <%end%>
+<%end%>
+
+<h3>Project Tasks:</h3>
+<%@tasks.each do |task|%>
+  <h4><%=task[:name]%></h4>
+  <%@current_user = @users.where("users.id = ?", task.user_id)%>
+  <%if @current_user == []%>
+    <li>This task has nobody assigned to it yet.</li>
+  <%elsif @current_user.first[:email].nil?%>
+    <li><%=@current_user.first[:first_name] + " " + @current_user.first[:last_name]%></li>
+  <%else%>
+    <li><%=@current_user.first[:first_name] + " " + @current_user.first[:last_name] + " " + @current_user.first[:email]%></li>
+  <%end%>
+<%end%>
